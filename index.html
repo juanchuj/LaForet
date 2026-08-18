@@ -91,7 +91,22 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 ::selection{background:var(--brand-cream);color:var(--brand-black)}
 
 /* ─────────────────────────  Layout  ───────────────────────── */
-.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;transition:grid-template-columns 0.25s ease}
+.app.sidebar-collapsed{grid-template-columns:0 1fr}
+.app.sidebar-collapsed .sidebar{transform:translateX(-100%);opacity:0;pointer-events:none}
+.sidebar{transition:transform 0.25s ease, opacity 0.2s ease}
+/* Toggle: half-tab on the right edge of the sidebar (or left edge of viewport when collapsed) */
+.sidebar-toggle{position:fixed;top:26px;z-index:100;width:22px;height:44px;border:1px solid var(--line);border-left:none;background:var(--bg-2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;user-select:none;padding:0;border-radius:0 6px 6px 0;box-shadow:2px 2px 6px rgba(0,0,0,0.15)}
+.sidebar-toggle:hover{background:var(--brand);color:var(--bg);border-color:var(--brand);width:26px}
+.sidebar-toggle .chev{font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1;transition:transform 0.25s ease;display:block}
+.app:not(.sidebar-collapsed) .sidebar-toggle{left:220px}
+.app.sidebar-collapsed .sidebar-toggle{left:0}
+.app.sidebar-collapsed .sidebar-toggle .chev{transform:rotate(180deg)}
+@media (max-width:640px){
+  .app{grid-template-columns:220px 1fr}
+  .app.sidebar-collapsed{grid-template-columns:0 1fr}
+  .app:not(.sidebar-collapsed) .sidebar-toggle{left:220px}
+}
 .sidebar{background:var(--bg-2);border-right:1px solid var(--line);padding:22px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .brand{padding:14px 18px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}
 .brand .logo{width:100%}
@@ -430,13 +445,167 @@ h3{font-family:'Copperplate','Inter',sans-serif;font-weight:600;font-size:12px;t
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 2px rgba(214,210,196,0.15)}
 /* Tables: better readability */
 table th{font-family:'Copperplate','Inter',sans-serif;font-size:10.5px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);font-weight:600;padding-bottom:8px}
+/* Cure salt editor */
+.cure-editor{margin-top:14px;padding:12px;border:1px dashed var(--line);border-radius:6px;background:rgba(214,210,196,0.03)}
+.cure-editor .cure-hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.cure-editor .cure-hd .k{font-family:'Copperplate','Inter',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--brand);font-weight:600}
+.br-cell.cure{border-color:var(--brand);background:rgba(214,210,196,0.04)}
+.cure-metrics{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.cure-metrics .pill{padding:6px 12px;font-size:11.5px}
+.cure-metrics .pill.green{background:rgba(122,139,111,0.15);border-color:var(--sage);color:var(--sage)}
+.cure-metrics .pill.yellow{background:rgba(176,148,104,0.15);border-color:#b09468;color:#d4b078}
+.cure-metrics .pill.red{background:rgba(167,94,58,0.2);border-color:#a75e3a;color:#e08662}
+.cure-metrics .pill.info{background:rgba(214,210,196,0.06);border-color:var(--line);color:var(--ink-2)}
+.ppm-preview{padding:6px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2);min-height:44px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.ppm-line{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px}
+.ppm-line .k{color:var(--muted);font-size:11px}
+.ppm-line .v{font-weight:600}
+.ppm-line.green .v{color:var(--sage)}
+.ppm-line.yellow .v{color:#d4b078}
+.ppm-line.red .v{color:#e08662}
+.cure-warn{margin-top:10px;padding:10px 12px;border-radius:5px;background:rgba(176,148,104,0.12);border-left:3px solid #b09468;display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:#d4b078}
+.cure-warn span:first-child{font-size:16px;line-height:1}
+.cure-ok{margin-top:10px;padding:8px 12px;border-radius:5px;background:rgba(122,139,111,0.1);border-left:3px solid var(--sage);display:flex;gap:10px;align-items:center;font-size:12px;color:var(--sage)}
+.cure-ok span:first-child{font-size:14px;font-weight:600}
+/* Residual / decay panels */
+.residual-panel, .residual-preview{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:6px;background:rgba(214,210,196,0.02)}
+.residual-panel .rp-hd, .residual-preview .rp-hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:6px;border-bottom:1px dotted var(--line)}
+.residual-panel .rp-hd .k, .residual-preview .rp-hd .k{font-family:'Copperplate','Inter',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--brand);font-weight:600}
+.residual-panel .rp-grid{display:grid;grid-template-columns:1fr auto 1fr 1fr auto 1fr;gap:8px;align-items:center}
+.residual-panel .rp-grid:has(.rp-cell:nth-child(4):not(.rp-arrow)){grid-template-columns:1fr auto 1fr 1fr auto 1fr}
+.residual-panel .rp-cell{padding:8px 10px;border:1px solid var(--line);border-radius:5px;background:var(--bg-2);min-height:60px;display:flex;flex-direction:column;justify-content:center}
+.residual-panel .rp-cell.rp-final{border-width:1px}
+.residual-panel .rp-cell.rp-final.green{border-color:var(--sage);background:rgba(122,139,111,0.08)}
+.residual-panel .rp-cell.rp-final.yellow{border-color:#b09468;background:rgba(176,148,104,0.08)}
+.residual-panel .rp-cell.rp-final.red{border-color:#a75e3a;background:rgba(167,94,58,0.1)}
+.residual-panel .rp-v{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:var(--ink);line-height:1.1}
+.residual-panel .rp-v .u{font-size:11px;color:var(--muted);margin-left:2px;font-weight:400}
+.residual-panel .rp-arrow{font-size:20px;color:var(--muted);text-align:center;font-family:'JetBrains Mono',monospace}
+.residual-panel .rp-note{margin-top:10px;color:var(--muted);line-height:1.5}
+.residual-panel .rp-note b{color:var(--ink-2)}
+.residual-preview .rp-mini{display:flex;gap:8px;flex-wrap:wrap}
+.chip-res{padding:6px 10px;border:1px solid var(--line);border-radius:14px;font-size:11.5px;color:var(--muted);background:var(--bg-2)}
+.chip-res b{color:var(--ink-2);font-weight:600}
+.chip-res .v{color:var(--brand);font-family:'JetBrains Mono',monospace;font-weight:600}
+.decay-chart{border-radius:4px}
+/* Inoculant panel — clearer, step-by-step layout */
+.inoc-panel{margin-top:6px;padding:12px 14px;border:1px solid var(--sage);border-radius:6px;background:rgba(122,139,111,0.05)}
+.inoc-panel .inoc-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;padding-bottom:8px;border-bottom:1px dotted var(--line)}
+.inoc-panel .in-name{font-family:'Copperplate','Inter',sans-serif;font-size:13px;color:var(--sage);text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+.inoc-recipe{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center}
+.inoc-recipe .ir-item{padding:10px 8px;background:var(--bg-2);border:1px solid var(--line);border-radius:5px;text-align:center;min-height:76px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.inoc-recipe .ir-item.ir-time{border-color:var(--sage);background:rgba(122,139,111,0.1)}
+.inoc-recipe .ir-k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;line-height:1.2}
+.inoc-recipe .ir-v{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--ink);font-weight:500;margin-top:2px;line-height:1.1}
+.inoc-recipe .ir-v b{color:var(--brand);font-weight:600;font-size:20px}
+.inoc-recipe .ir-v .u{font-size:11px;color:var(--muted);margin-left:2px;font-weight:400}
+.inoc-recipe .ir-plus{font-size:20px;color:var(--muted);text-align:center;font-family:'JetBrains Mono',monospace}
+.inoc-ratio{margin-top:8px;padding-top:8px;border-top:1px dotted var(--line);color:var(--muted);text-align:center;font-style:italic}
+.inoc-instruction{margin-bottom:12px;padding:10px 14px;background:rgba(122,139,111,0.08);border-left:3px solid var(--sage);border-radius:4px;font-size:13.5px;line-height:1.55;color:var(--ink)}
+.inoc-instruction b{color:var(--brand);font-family:'JetBrains Mono',monospace;font-weight:600}
+/* ─── Brine Editor v2 ─── */
+.brine-v2{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+
+/* Panel 1: Objective */
+.bv-objective{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;padding:14px 16px;background:rgba(214,210,196,0.03);border:1px solid var(--line);border-radius:6px}
+.bv-lbl{font-family:'Copperplate','Inter',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--brand);font-weight:600;display:block;margin-bottom:8px}
+.bv-lbl-mini{font-family:'Copperplate','Inter',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);font-weight:600;display:block;margin-bottom:4px}
+.bv-lbl-section{font-family:'Copperplate','Inter',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--brand);font-weight:600;text-align:center;padding-top:4px;border-top:1px dashed var(--line);margin-top:-6px;padding-top:14px}
+
+.bv-slider-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.bv-range{flex:1;height:4px;-webkit-appearance:none;appearance:none;background:var(--line);border-radius:2px;outline:none;cursor:pointer}
+.bv-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;background:var(--brand);border-radius:50%;cursor:pointer;border:2px solid var(--bg-2)}
+.bv-range::-moz-range-thumb{width:16px;height:16px;background:var(--brand);border-radius:50%;cursor:pointer;border:2px solid var(--bg-2)}
+.bv-num-inline{width:64px;padding:6px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--brand);font-weight:600}
+.bv-unit{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);min-width:26px}
+
+/* Panel 2: Split cards */
+.bv-split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bv-card{border:1px solid var(--line);border-radius:6px;padding:14px;background:var(--bg-2);display:flex;flex-direction:column;gap:10px;transition:border-color 0.2s ease}
+.bv-card-common{border-color:rgba(122,139,111,0.35)}
+.bv-card-cure{border-color:var(--line)}
+.bv-card-cure.active{border-color:var(--brand)}
+.bv-card-hd{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px dotted var(--line)}
+.bv-card-icon{width:32px;height:32px;border-radius:50%;background:rgba(214,210,196,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--brand);flex-shrink:0}
+.bv-card-common .bv-card-icon{background:rgba(122,139,111,0.15);color:var(--sage)}
+.bv-card-cure.active .bv-card-icon{background:rgba(214,210,196,0.15);color:var(--brand)}
+.bv-card-title{font-family:'Academy Engraved LET','Playfair Display',Georgia,serif;font-size:17px;color:var(--ink);line-height:1.1}
+.bv-card-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.bv-card-body{display:flex;flex-direction:column;gap:6px}
+.bv-select{width:100%}
+.bv-hint{color:var(--muted);margin-top:4px;line-height:1.5}
+.bv-card-metric{margin-top:8px;padding-top:10px;border-top:1px dotted var(--line)}
+.bv-metric-v{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--ink);margin:4px 0 6px;line-height:1.1}
+.bv-metric-v b{color:var(--brand);font-weight:600;font-size:20px}
+.bv-metric-v .u{color:var(--muted);font-size:12px;font-weight:400;margin-left:2px}
+.bv-share-bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin:6px 0 4px}
+.bv-share-fill{height:100%;transition:width 0.3s ease}
+.bv-share-fill.common{background:var(--sage)}
+.bv-share-fill.cure{background:var(--brand)}
+
+.bv-ppm{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dotted var(--line)}
+.bv-ppm-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:4px;background:var(--bg)}
+.bv-ppm-item.green{border-left:3px solid var(--sage)}
+.bv-ppm-item.yellow{border-left:3px solid #b09468}
+.bv-ppm-item.red{border-left:3px solid #a75e3a;background:rgba(167,94,58,0.08)}
+.bv-ppm-k{font-size:12px;color:var(--ink-2)}
+.bv-ppm-v{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--ink)}
+.bv-ppm-item.green .bv-ppm-v{color:var(--sage)}
+.bv-ppm-item.yellow .bv-ppm-v{color:#d4b078}
+.bv-ppm-item.red .bv-ppm-v{color:#e08662}
+.bv-ppm-v .u{font-size:11px;color:var(--muted);font-weight:400;margin-left:2px}
+
+/* Panel 3: Summary */
+.bv-summary{padding:16px 18px;background:linear-gradient(180deg, rgba(214,210,196,0.06), rgba(214,210,196,0.02));border:1px solid var(--brand);border-radius:6px}
+.bv-summary-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.bv-summary-title{font-family:'Copperplate','Inter',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.14em;color:var(--brand);font-weight:600}
+.bv-summary-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:center}
+.bv-sum-cell{padding:10px;border:1px solid var(--line);border-radius:5px;background:var(--bg-2);text-align:center}
+.bv-sum-cell.bv-sum-total{border-color:rgba(214,210,196,0.35);background:rgba(214,210,196,0.05)}
+.bv-sum-cell.bv-sum-final{border-color:var(--brand);background:rgba(214,210,196,0.08)}
+.bv-sum-v{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:var(--ink);line-height:1.1;margin-top:4px}
+.bv-sum-cell.bv-sum-final .bv-sum-v{color:var(--brand);font-size:22px}
+.bv-sum-v .u{font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
+.bv-sum-op{font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--muted);text-align:center}
+.bv-summary-water{margin-top:10px;padding-top:8px;border-top:1px dotted var(--line);color:var(--muted);text-align:center;font-style:italic}
+
+/* Residual legend */
+.bv-res-legend{display:flex;flex-direction:column;gap:2px;padding:8px 10px;margin-bottom:10px;background:var(--bg);border-radius:4px;border-left:2px solid var(--muted)}
+.bv-res-legend b{color:var(--brand)}
+
+/* Res chip v2 */
+.chip-res-v2{padding:10px 12px;border:1px solid var(--line);border-radius:5px;background:var(--bg-2);flex:1;min-width:220px}
+.chip-res-v2 .cr-label{font-size:12px;color:var(--ink-2);margin-bottom:4px}
+.chip-res-v2 .cr-label b{color:var(--brand)}
+.chip-res-v2 .cr-flow{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink);margin-bottom:2px}
+.chip-res-v2 .cr-in{color:var(--muted)}
+.chip-res-v2 .cr-out{color:var(--brand);font-weight:600}
+.chip-res-v2 .cr-drop{color:var(--muted)}
+.rp-mini{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* Responsive */
+@media (max-width:900px){
+  .bv-objective, .bv-split, .bv-summary-grid{grid-template-columns:1fr}
+  .bv-sum-op{display:none}
+}
+
+/* Auto-injected recipe rows (brine salts) */
+.recipe-scaled .rt.auto-row{background:rgba(122,139,111,0.05);margin:0 -4px;padding-left:8px;padding-right:8px;border-left:2px solid var(--sage)}
+.recipe-scaled .rt.auto-row .n{color:var(--ink-2)}
+.auto-badge{display:inline-block;padding:1px 6px;margin-left:6px;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;color:var(--sage);background:rgba(122,139,111,0.12);border-radius:8px;font-family:'Copperplate','Inter',sans-serif;vertical-align:middle}
+.auto-recipe-block{padding:10px 12px;background:rgba(122,139,111,0.06);border:1px dashed rgba(122,139,111,0.3);border-radius:5px;margin:8px 0 12px}
+.auto-recipe-block .auto-recipe-hd{color:var(--sage);margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted rgba(122,139,111,0.2);letter-spacing:0.05em}
+.auto-recipe-block .auto-recipe-hd b{color:var(--sage);font-family:'Copperplate','Inter',sans-serif;text-transform:uppercase;font-size:10.5px;letter-spacing:0.12em}
+.auto-recipe-block .ing-row{grid-template-columns:1.5fr 1fr auto 1.5fr auto;padding:4px 0;border-bottom:1px dotted rgba(122,139,111,0.15)}
+.auto-recipe-block .ing-row:last-child{border-bottom:0}
 /* Toast more visible */
 .toast{font-weight:500;letter-spacing:0.02em;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 </style>
 
 </head>
 <body>
-<div class="app">
+<button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Mostrar/ocultar menu" aria-label="Alternar menu lateral"><span class="chev">&#8249;</span></button>
+<div class="app" id="app-root">
   <aside class="sidebar">
     <div class="brand">
       <div class="logo">
@@ -531,8 +700,186 @@ const STAGE_MAP = Object.fromEntries(STAGE_TYPES.map(s => [s.k, s]));
    Any ingredient in category 'sal' or 'sal-curado' with a gPerTsp density
    becomes an available brining salt. Default density 6.0 g/tsp if unset. */
 const DEFAULT_G_PER_TSP = 6.0;
+/* Inoculant unit conversions */
+const LB_TO_KG = 0.453592;
+const KG_PER_5LB = 5 * LB_TO_KG;   // ~2.268 kg
+const ML_PER_TSP = 5;
+const ML_PER_CUP = 236.588;
+/* Take an inoculant ingredient + total kg of meat, return scaled amounts.
+   Prefers ing.waterMlPer5lb (explicit ml) over ing.waterCupsPer5lb (legacy cups). */
+function scaleInoculant(ing, totalKg){
+  if(!ing) return null;
+  const tspPer5lb = +ing.starterTsp || 0;
+  const mlPer5lb = (+ing.waterMlPer5lb) || ((+ing.waterCupsPer5lb || 0) * ML_PER_CUP);
+  const cupsPer5lb = mlPer5lb / ML_PER_CUP;
+  const rehydMin = +ing.rehydMin || 30;
+  if(!tspPer5lb) return null;
+  const units5lb = totalKg / KG_PER_5LB;
+  const starterTsp = tspPer5lb * units5lb;
+  const waterMl = mlPer5lb * units5lb;
+  const waterCups = waterMl / ML_PER_CUP;
+  return {
+    starterTsp,
+    starterMl: starterTsp * ML_PER_TSP,
+    waterCups,
+    waterMl,
+    rehydMin,
+    tspPer5lb, cupsPer5lb, mlPer5lb, units5lb
+  };
+}
+/* Format tsp value as human-friendly fraction (e.g., 0.5 -> "1/2", 0.75 -> "3/4", else decimal) */
+function fmtFrac(x, precision){
+  if(!isFinite(x) || x <= 0) return '0';
+  const whole = Math.floor(x);
+  const frac = x - whole;
+  const frags = [
+    [0, ''], [0.125, '1/8'], [0.1667, '1/6'], [0.25, '1/4'], [0.333, '1/3'],
+    [0.375, '3/8'], [0.5, '1/2'], [0.625, '5/8'], [0.667, '2/3'], [0.75, '3/4'],
+    [0.875, '7/8'], [1, '']
+  ];
+  let best = null, bestDiff = 0.04;
+  for(const [v, label] of frags){
+    const d = Math.abs(frac - v);
+    if(d < bestDiff){ best = [v, label]; bestDiff = d; }
+  }
+  if(best){
+    if(best[0] === 0) return String(whole);
+    if(best[0] === 1) return String(whole+1);
+    return whole > 0 ? `${whole} ${best[1]}` : best[1];
+  }
+  return x.toFixed(precision||2);
+}
 function saltIngredients(){
   return db.ingredients.filter(i => i.category==='sal' || i.category==='sal-curado');
+}
+function commonSaltIngredients(){
+  return db.ingredients.filter(i => i.category==='sal');
+}
+function cureSaltIngredients(){
+  return db.ingredients.filter(i => i.category==='sal-curado');
+}
+function cureSaltByName(name){
+  return db.ingredients.find(i => i.name===name && i.category==='sal-curado');
+}
+function defaultCommonSaltName(){
+  const salts = commonSaltIngredients();
+  return salts[0]?.name || '';
+}
+/* USDA in-going limits for dry-cured meat (ppm of green weight) */
+const NITRITE_MAX_PPM = 625;
+const NITRATE_MAX_PPM = 2187;
+const NITRITE_TARGET_PPM = 200;
+const NITRITE_WARN_PPM = 500;
+
+/* ─── Nitrite/nitrate degradation kinetics ───────────────────────
+   Reference: Nordin (1969), Nature Sci Rep 2025 (n=1132 residual survey).
+   Nitrite depletes exponentially with half-life driven by T and pH:
+     log10(halfLifeHours) = 0.65 - 0.025*T(C) + 0.35*pH
+   Nitrate (in InstaCure #2) depletes ~4x slower, and part of it converts
+   back to nitrite as a reservoir. Typical residual after 60+ days of
+   dry cure: 5-20 ppm nitrite, 15-50 ppm nitrate. */
+const DEFAULT_CAVA_TEMP = 13;   // C, typical cava temperature
+const DEFAULT_CAVA_PH   = 5.8;  // typical cured-meat pH
+const RESIDUAL_TYPICAL_NITRITE_PPM = 13.7;  // Nature 2025 mean
+const RESIDUAL_TYPICAL_NITRATE_PPM = 32.6;
+
+function nitriteHalfLifeDays(tempC, ph){
+  // Nordin: log10(t_half hours) = 0.65 - 0.025*T + 0.35*pH
+  const logH = 0.65 - 0.025*tempC + 0.35*ph;
+  return Math.pow(10, logH) / 24;
+}
+function nitrateHalfLifeDays(tempC, ph){
+  // Nitrate is ~3-4x more stable than nitrite at typical cave conditions
+  return nitriteHalfLifeDays(tempC, ph) * 3.5;
+}
+/* Exponential decay: N(t) = N0 * 0.5^(t/halfLife) */
+function calcResidualNitrite(ingoingPpm, days, tempC, ph){
+  if(!ingoingPpm) return 0;
+  const half = nitriteHalfLifeDays(tempC, ph);
+  return ingoingPpm * Math.pow(0.5, days/half);
+}
+function calcResidualNitrate(ingoingPpm, days, tempC, ph){
+  if(!ingoingPpm) return 0;
+  const half = nitrateHalfLifeDays(tempC, ph);
+  return ingoingPpm * Math.pow(0.5, days/half);
+}
+/* Model: as nitrate degrades, a fraction is reduced to nitrite by bacterial action.
+   Then that nitrite also decays. Net contribution to final nitrite ppm at time t:
+   integral approximation using midpoint of the process. */
+function nitriteFromNitrateReduction(ingoingNitratePpm, days, tempC, ph){
+  if(!ingoingNitratePpm) return 0;
+  // Approximate: about 25% of degraded nitrate momentarily exists as nitrite,
+  // that nitrite has time (days/2) to decay before end of process.
+  const halfNitrate = nitrateHalfLifeDays(tempC, ph);
+  const nitrateLost = ingoingNitratePpm * (1 - Math.pow(0.5, days/halfNitrate));
+  const transientNitrite = nitrateLost * 0.25;
+  const halfNitrite = nitriteHalfLifeDays(tempC, ph);
+  return transientNitrite * Math.pow(0.5, (days/2)/halfNitrite);
+}
+/* Full residual model combining direct nitrite decay + nitrate-derived nitrite */
+function calcFullResidual(ingoingNitritePpm, ingoingNitratePpm, days, tempC, ph){
+  const directResidualNitrite = calcResidualNitrite(ingoingNitritePpm, days, tempC, ph);
+  const derivedNitrite = nitriteFromNitrateReduction(ingoingNitratePpm, days, tempC, ph);
+  const residualNitrite = directResidualNitrite + derivedNitrite;
+  // A fraction (~12%) of the degraded nitrite is re-oxidized to shelf-stable nitrate
+  // during long dry-cure aging. This is the biochemical basis for why aged prosciutto
+  // has more nitrate than nitrite in its residual profile.
+  const degradedNitrite = ingoingNitritePpm - directResidualNitrite;
+  const nitrateFromNitriteOxidation = Math.max(0, degradedNitrite * 0.12);
+  const residualNitrate = calcResidualNitrate(ingoingNitratePpm, days, tempC, ph) + nitrateFromNitriteOxidation;
+  return {
+    residualNitrite,
+    residualNitrate,
+    halfLifeNitrite: nitriteHalfLifeDays(tempC, ph),
+    halfLifeNitrate: nitrateHalfLifeDays(tempC, ph),
+    nitrateFromNitriteOxidation,
+    reductionNitrite: 100 * (1 - residualNitrite/(ingoingNitritePpm||1)),
+    reductionNitrate: ingoingNitratePpm ? 100 * ((ingoingNitratePpm - calcResidualNitrate(ingoingNitratePpm, days, tempC, ph))/ingoingNitratePpm) : 0
+  };
+}
+/* Sum dEst across all cure-related stages of a type. */
+function totalCureProcessDays(type){
+  if(!type || !type.stages) return 0;
+  return type.stages.reduce((s, st)=> s + (+st.dEst||0), 0);
+}
+/* Same for a batch's stages (may have adjusted dates) */
+function totalCureProcessDaysBatch(batch){
+  if(!batch || !batch.stages) return 0;
+  return batch.stages.reduce((s, st)=> s + (+st.dEst||0), 0);
+}
+
+/* Compute cure-salt ppm and safety level for a given brine on a given meat mass. */
+function calcCureContribution(brine, meatG){
+  const cure = brine?.cureSalt;
+  if(!cure || !cure.ingredient || !(+cure.gPerKg > 0)){
+    return { cureG:0, naclFromCure:0, nitritePpm:0, nitratePpm:0, level:'gray', maxCureG:0, cureIng:null };
+  }
+  const ing = cureSaltByName(cure.ingredient);
+  if(!ing){
+    return { cureG:0, naclFromCure:0, nitritePpm:0, nitratePpm:0, level:'gray', maxCureG:0, cureIng:null };
+  }
+  const meatKg = meatG / 1000;
+  const cureG = (+cure.gPerKg) * meatKg;
+  const nitritePct = +ing.nitritePct || 0;
+  const nitratePct = +ing.nitratePct || 0;
+  const naclPct = +ing.naclPct || 0;
+  const maxGPerKg = +ing.maxGPerKg || 4.0;
+  const nitritePpm = (cureG * nitritePct/100) * 1e6 / meatG;
+  const nitratePpm = (cureG * nitratePct/100) * 1e6 / meatG;
+  const naclFromCure = cureG * naclPct/100;
+  let level = 'green';
+  if(nitritePpm > NITRITE_MAX_PPM || nitratePpm > NITRATE_MAX_PPM || (+cure.gPerKg) > maxGPerKg) level = 'red';
+  else if(nitritePpm > NITRITE_WARN_PPM) level = 'yellow';
+  else if(nitritePpm > NITRITE_TARGET_PPM) level = 'yellow';
+  return { cureG, naclFromCure, nitritePpm, nitratePpm, level, maxCureG: maxGPerKg*meatKg, cureIng: ing };
+}
+/* Residual estimation wrapper — takes a cure result + days + env */
+function calcCureResidual(cureResult, days, tempC, ph){
+  if(!cureResult || !cureResult.cureIng || !days) return null;
+  const t = tempC || DEFAULT_CAVA_TEMP;
+  const p = ph || DEFAULT_CAVA_PH;
+  const r = calcFullResidual(cureResult.nitritePpm, cureResult.nitratePpm, days, t, p);
+  return { ...r, days, tempC:t, ph:p };
 }
 function saltByName(name){
   return db.ingredients.find(i => i.name===name && (i.category==='sal'||i.category==='sal-curado'));
@@ -561,15 +908,31 @@ const BRINE_PRESETS = [
    saltPct = target % of (meat + water)
    waterPct = optional water as % of meat weight (0-50)
    Returns salt grams, salt tsp (by chosen salt type), water grams, total, final % */
-function calcEqBrine(meatG, saltPct, waterPct, saltName){
+function calcEqBrine(meatG, saltPct, waterPct, saltName, cureBrine){
   const waterG = meatG * (waterPct/100);
-  const saltG  = (meatG + waterG) * (saltPct/100);
-  const totalG = meatG + waterG + saltG;
+  const totalTargetG = (meatG + waterG) * (saltPct/100);
+  const cure = calcCureContribution(cureBrine || { cureSalt: null }, meatG);
+  const commonG = Math.max(0, totalTargetG - cure.naclFromCure);
+  const totalNaCl = commonG + cure.naclFromCure;
+  const totalG = meatG + waterG + commonG + cure.cureG;
   const gPerTsp = saltDensity(saltName);
-  const saltTsp = saltG / gPerTsp;
-  const finalPct = (saltG / totalG) * 100;
+  const commonTsp = commonG / gPerTsp;
+  const finalPct = (totalNaCl / totalG) * 100;
   const saltObj = saltByName(saltName) || { name: saltName || 'Sal', gPerTsp };
-  return { waterG, saltG, totalG, saltTsp, finalPct, salt: saltObj };
+  return {
+    waterG, totalG, finalPct, salt: saltObj,
+    commonG, commonTsp,
+    cureG: cure.cureG,
+    cureTsp: cure.cureIng ? cure.cureG / ((+cure.cureIng.gPerTsp) || DEFAULT_G_PER_TSP) : 0,
+    cureIng: cure.cureIng,
+    naclFromCure: cure.naclFromCure,
+    nitritePpm: cure.nitritePpm,
+    nitratePpm: cure.nitratePpm,
+    cureLevel: cure.level,
+    maxCureG: cure.maxCureG,
+    saltG: commonG,
+    saltTsp: commonTsp
+  };
 }
 
 
@@ -583,8 +946,8 @@ const SEED_SALTS = [
   {n:'Morton Kosher', u:'g', cat:'sal', gPerTsp:4.8, note:'Densidad media, entre mesa y Diamond Crystal'},
   {n:'Sal rosada del Himalaya', u:'g', cat:'sal', gPerTsp:5.9, note:'Similar a marina con minerales traza (estimado)'},
   {n:'Sal en escamas (Maldon)', u:'g', cat:'sal', gPerTsp:2.4, note:'Muy liviana; mejor de acabado (estimado)'},
-  {n:'InstaCure #1', u:'g', cat:'sal-curado', gPerTsp:5.7, note:'Nitrito de sodio; NO usar en piezas >34mm ni curas largas'},
-  {n:'InstaCure #2', u:'g', cat:'sal-curado', gPerTsp:5.7, note:'Nitrito+nitrato; para curas largas / piezas gruesas'},
+  {n:'InstaCure #1', u:'g', cat:'sal-curado', gPerTsp:5.7, nitritePct:6.25, nitratePct:0, naclPct:93.75, maxGPerKg:4.0, note:'Nitrito de sodio 6.25% + NaCl 93.75%. Para curas cortas (<30 dias). Max 4 g/kg (250 ppm nitrito)'},
+  {n:'InstaCure #2', u:'g', cat:'sal-curado', gPerTsp:5.7, nitritePct:6.25, nitratePct:4.0, naclPct:89.75, maxGPerKg:4.0, note:'Nitrito 6.25% + Nitrato 4% + NaCl 89.75%. Para curas largas (>30 dias). Max 4 g/kg'},
 ];
 
 // Seed ingredients (extracted from your recipe files)
@@ -596,8 +959,8 @@ const SEED_INGREDIENTS = [
   {n:'Morton Kosher', u:'g', cat:'sal', gPerTsp:4.8, note:'Densidad media, entre mesa y Diamond Crystal'},
   {n:'Sal rosada del Himalaya', u:'g', cat:'sal', gPerTsp:5.9, note:'Similar a marina con minerales traza (estimado)'},
   {n:'Sal en escamas (Maldon)', u:'g', cat:'sal', gPerTsp:2.4, note:'Muy liviana; mejor de acabado (estimado)'},
-  {n:'InstaCure #1', u:'g', cat:'sal-curado', gPerTsp:5.7, note:'Nitrito de sodio; NO usar en piezas >34mm ni curas largas'},
-  {n:'InstaCure #2', u:'g', cat:'sal-curado', gPerTsp:5.7, note:'Nitrito+nitrato; para curas largas / piezas gruesas'},
+  {n:'InstaCure #1', u:'g', cat:'sal-curado', gPerTsp:5.7, nitritePct:6.25, nitratePct:0, naclPct:93.75, maxGPerKg:4.0, note:'Nitrito de sodio 6.25% + NaCl 93.75%. Para curas cortas (<30 dias). Max 4 g/kg (250 ppm nitrito)'},
+  {n:'InstaCure #2', u:'g', cat:'sal-curado', gPerTsp:5.7, nitritePct:6.25, nitratePct:4.0, naclPct:89.75, maxGPerKg:4.0, note:'Nitrito 6.25% + Nitrato 4% + NaCl 89.75%. Para curas largas (>30 dias). Max 4 g/kg'},
   {n:'Turbinado Sugar', u:'g', cat:'azucar'},
   {n:'Sugar', u:'g', cat:'azucar'},
   {n:'Dextrosa', u:'g', cat:'azucar'},
@@ -634,9 +997,9 @@ const SEED_INGREDIENTS = [
   {n:'Sambuca', u:'ml', cat:'liquido'},
   {n:'Polenta Flour', u:'g', cat:'aditivo'},
   // Inoculantes / cultivos
-  {n:'Flavor of Italy', u:'g', cat:'cultivo', note:'Cultivo bacteriano; 1/4 tsp por kg, rehidratar 30 min en 1/8 cup agua destilada'},
-  {n:'LHP Dry', u:'g', cat:'cultivo', note:'1/2 tsp por 5 lb carne; rehidratar en 1/4 cup agua destilada'},
-  {n:'Mold 600', u:'g', cat:'cultivo', note:'1/2 tsp en 1/2 cup agua no clorada; alcanza para 5-10 lb; reposo mín 5h a temp ambiente'},
+  {n:'Flavor of Italy', u:'g', cat:'cultivo', starterTsp:0.25, waterMlPer5lb:120, rehydMin:30, note:'Rehidratar 1/4 cucharadita de starter en 120 ml de agua destilada por cada 2,27 kg de carne/grasa. Dejar rehidratar 30 minutos.'},
+  {n:'LHP Dry', u:'g', cat:'cultivo', starterTsp:0.5, waterMlPer5lb:60, rehydMin:30, note:'Rehidratar 1/2 cucharadita de starter en 60 ml de agua destilada por cada 2,27 kg de carne/grasa. Dejar rehidratar 30 minutos.'},
+  {n:'Mold 600', u:'g', cat:'cultivo', starterTsp:0.5, waterMlPer5lb:60, rehydMin:30, note:'Rehidratar 1/2 cucharadita de starter en 60 ml de agua destilada por cada 2,27 kg de carne/grasa. Dejar rehidratar 30 minutos.'},
   // Cortes de carne (referenciales)
   {n:'Bondiola', u:'g', cat:'carne'},
   {n:'Lean Pork', u:'g', cat:'carne'},
@@ -653,9 +1016,7 @@ const SEED_TYPES = [
     notes:'Ternera magra, muy tradicional italiana. Objetivo textura firme.',
     yield:{ target:60, min:55, max:65 },
     stages:[
-      {k:'Curado', dEst:20, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:22.5},
-        {i:'InstaCure #2', a:2.5},
+      {k:'Curado', dEst:20, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:2.5}}, recipe:[
         {i:'Black Pepper', a:4},
         {i:'Sugar', a:15},
         {i:'Fresh Rosemary', a:2},
@@ -672,8 +1033,7 @@ const SEED_TYPES = [
     notes:'Bondiola de cerdo. Perfil italiano picante-dulce.',
     yield:{ target:60, min:55, max:65 },
     stages:[
-      {k:'Curado', dEst:17, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:30},
+      {k:'Curado', dEst:17, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:2.5}}, recipe:[
         {i:'Turbinado Sugar', a:15},
         {i:'Black Pepper', a:2.5},
         {i:'Red Pepper Flakes', a:0.8},
@@ -683,7 +1043,6 @@ const SEED_TYPES = [
         {i:'Smoked Paprika', a:3.8},
         {i:'Juniper Molidas', a:1.6},
         {i:'Eritorbato', a:0.9},
-        {i:'InstaCure #2', a:2.5},
       ]},
       {k:'Secado', dEst:60, env:{tMin:12,tMax:15,hMin:75,hMax:85}, recipe:[]},
       {k:'Balanceo', dEst:7},
@@ -695,11 +1054,9 @@ const SEED_TYPES = [
     notes:'Corazón del jamón. Pieza noble, largo madurado.',
     yield:{ target:60, min:55, max:65 },
     stages:[
-      {k:'Curado', dEst:28, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:27.5},
+      {k:'Curado', dEst:28, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:0.9}}, recipe:[
         {i:'Black Pepper', a:2.5},
         {i:'Eritorbato', a:0.9},
-        {i:'InstaCure #2', a:0.9},
       ]},
       {k:'Secado', dEst:90, env:{tMin:12,tMax:14,hMin:78,hMax:85}, recipe:[]},
       {k:'Balanceo', dEst:14},
@@ -711,8 +1068,7 @@ const SEED_TYPES = [
     notes:'Lomo de cerdo perfil español (pimentón).',
     yield:{ target:65, min:60, max:70 },
     stages:[
-      {k:'Curado', dEst:10, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:30},
+      {k:'Curado', dEst:10, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:2.5}}, recipe:[
         {i:'Turbinado Sugar', a:15},
         {i:'Black Pepper', a:1.5},
         {i:'Spanish Paprika Dulce', a:5},
@@ -721,7 +1077,6 @@ const SEED_TYPES = [
         {i:'Onion Powder', a:2},
         {i:'Dried Bay Leafs', a:1},
         {i:'Eritorbato', a:0.9},
-        {i:'InstaCure #2', a:2.5},
       ]},
       {k:'Secado', dEst:42, env:{tMin:12,tMax:15,hMin:75,hMax:85}, recipe:[]},
       {k:'Balanceo', dEst:11},
@@ -733,9 +1088,7 @@ const SEED_TYPES = [
     notes:'Lomo italiano con recubrimiento de vino y pimienta calabresa.',
     yield:{ target:65, min:60, max:70 },
     stages:[
-      {k:'Curado', dEst:10, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:25},
-        {i:'InstaCure #2', a:2.5},
+      {k:'Curado', dEst:10, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:0.9}}, recipe:[
         {i:'Black Pepper', a:5},
         {i:'Sugar', a:7.5},
         {i:'Dried Rosemary', a:2},
@@ -756,11 +1109,9 @@ const SEED_TYPES = [
     notes:'Perfil serrano suave; pierna de cerdo pequeña.',
     yield:{ target:60, min:55, max:65 },
     stages:[
-      {k:'Curado', dEst:20, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:27.5},
+      {k:'Curado', dEst:20, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:2.5}}, recipe:[
         {i:'Black Pepper', a:2.5},
         {i:'Eritorbato', a:0.9},
-        {i:'InstaCure #2', a:0.9},
       ]},
       {k:'Secado', dEst:75, env:{tMin:12,tMax:15,hMin:75,hMax:85}, recipe:[]},
       {k:'Balanceo', dEst:14},
@@ -772,15 +1123,13 @@ const SEED_TYPES = [
     notes:'Perfil Alpino: enebro, laurel; se ahuma en frío tradicionalmente.',
     yield:{ target:60, min:55, max:65 },
     stages:[
-      {k:'Curado', dEst:21, eb:true, shape:'tubular', recipe:[
-        {i:'Kosher Salt', a:27.5},
+      {k:'Curado', dEst:21, eb:true, shape:'tubular', brine:{saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:2.5}}, recipe:[
         {i:'Black Pepper', a:2.5},
         {i:'Eritorbato', a:0.9},
         {i:'Juniper Berries', a:1.5},
         {i:'Dried Rosemary', a:3},
         {i:'Garlic Powder', a:11.6},
         {i:'Fennel Seed', a:1.6},
-        {i:'InstaCure #2', a:0.9},
       ]},
       {k:'Secado', dEst:60, env:{tMin:12,tMax:15,hMin:75,hMax:85}, recipe:[]},
       {k:'Balanceo', dEst:14},
@@ -792,15 +1141,13 @@ const SEED_TYPES = [
     notes:'Pechuga de pato; ciclo corto.',
     yield:{ target:50, min:45, max:55 },
     stages:[
-      {k:'Curado', dEst:3, eb:true, shape:'flat', recipe:[
-        {i:'Kosher Salt', a:27.5},
+      {k:'Curado', dEst:3, eb:true, shape:'flat', brine:{saltPct:3.0, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:'InstaCure #2', gPerKg:2.5}}, recipe:[
         {i:'Sugar', a:2.5},
         {i:'Garlic Powder', a:10},
         {i:'Fennel Seed', a:2.7},
         {i:'White Pepper', a:5},
         {i:'Ground Clove', a:1.5},
         {i:'Ground Nutmeg', a:1.5},
-        {i:'InstaCure #1', a:1.5},
       ]},
       {k:'Secado', dEst:14, env:{tMin:12,tMax:15,hMin:78,hMax:85}, recipe:[]},
       {k:'Balanceo', dEst:7},
@@ -834,8 +1181,8 @@ const SEED_TYPES = [
     yield:{ target:60, min:55, max:65 },
     stages:[
       {k:'Adobado', dEst:0.5, ph:{start:5.8,end:5.4,dangerLow:4.6,dangerHigh:6.2}, recipe:[
-        {i:'Kosher Salt', a:25},
-        {i:'InstaCure #1', a:2.5, note:'Si diámetro > 34mm usar #2'},
+        {i:'Kosher Salt', a:27.5},
+        {i:'InstaCure #1', a:2.5},
         {i:'Dextrosa', a:2},
         {i:'Minced Garlic', a:10},
         {i:'White Pepper', a:5},
@@ -856,7 +1203,7 @@ const SEED_TYPES = [
     stages:[
       {k:'Adobado', dEst:1, ph:{start:5.8,end:5.4,dangerLow:4.6,dangerHigh:6.2}, recipe:[
         {i:'Kosher Salt', a:25},
-        {i:'InstaCure #2', a:2.5},
+        {i:'InstaCure #1', a:2.5},
         {i:'Dextrosa', a:2},
         {i:'Sugar', a:2},
         {i:'Black Pepper', a:2},
@@ -878,7 +1225,7 @@ const SEED_TYPES = [
     stages:[
       {k:'Adobado', dEst:1, ph:{start:5.8,end:5.4,dangerLow:4.6,dangerHigh:6.2}, recipe:[
         {i:'Kosher Salt', a:23},
-        {i:'InstaCure #2', a:2.5},
+        {i:'InstaCure #1', a:1.5},
         {i:'Dextrosa', a:6},
         {i:'Sugar', a:2},
         {i:'Black Pepper', a:3},
@@ -902,7 +1249,7 @@ const SEED_TYPES = [
     stages:[
       {k:'Adobado', dEst:0.5, ph:{start:5.8,end:5.4,dangerLow:4.6,dangerHigh:6.2}, recipe:[
         {i:'Kosher Salt', a:25},
-        {i:'InstaCure #1', a:2.5},
+        {i:'InstaCure #2', a:2.5},
         {i:'Black Pepper', a:3},
         {i:'Fennel Seed', a:2.5},
         {i:'Red Wine', a:75},
@@ -935,6 +1282,36 @@ let openBatchId = null;
 function saveDBLocal(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); } catch(e){ console.error(e); }
 }
+/* When true, updateX() functions skip render() to preserve input focus.
+   Set by any input's onfocus, cleared by onblur which triggers a re-render. */
+let SKIP_RENDER = false;
+function withFocusPreservation(el){
+  SKIP_RENDER = true;
+  const finish = ()=>{
+    if(!SKIP_RENDER) return;
+    SKIP_RENDER = false;
+    render();
+    el.removeEventListener('blur', finish);
+  };
+  el.addEventListener('blur', finish, { once:true });
+}
+/* Normalize legacy/mixed units to metric standards */
+function normalizeUnit(u){
+  if(!u) return 'g';
+  const s = String(u).toLowerCase().trim();
+  const map = {
+    'oz':'g', 'lb':'g', 'lbs':'g', 'pound':'g',
+    'tsp':'g', 'tbsp':'g', 'cup':'ml', 'cups':'ml', 'fl oz':'ml',
+    'in':'cm', 'inch':'cm', 'inches':'cm',
+    'f':'C', 'fahrenheit':'C',
+    'gramos':'g', 'gramo':'g', 'grams':'g', 'gram':'g',
+    'mililitros':'ml', 'mililitro':'ml', 'milliliter':'ml',
+    'litros':'L', 'litro':'L', 'liter':'L', 'l':'L',
+    'centimetros':'cm', 'centimetro':'cm',
+    'celsius':'C', 'grados':'C'
+  };
+  return map[s] || s;
+}
 function saveDB(){
   saveDBLocal();
   if(typeof icloudDebouncedPush==='function') icloudDebouncedPush();
@@ -942,15 +1319,46 @@ function saveDB(){
 function loadDB(){
   const raw = localStorage.getItem(LS_KEY);
   if(raw){
-    try{ db = JSON.parse(raw); migrateSalts(); migrateWeightLogsToPieces(); return true; } catch(e){}
+    try{ db = JSON.parse(raw); migrateSalts(); migrateWeightLogsToPieces();
+  migrateBackfillBrineOnBatches();
+  migrateStripSaltFromCureBatches(); return true; } catch(e){}
   }
   return false;
 }
 function migrateSalts(){
-  // Legacy saltId -> saltIngredient name mapping (pre-ingredient-merge data)
   const legacy = {fine_sea:'Sal marina fina', table:'Sal de mesa', diamond:'Diamond Crystal Kosher',
                   morton:'Morton Kosher', himalaya:'Sal rosada del Himalaya', maldon:'Sal en escamas (Maldon)'};
   let touched = false;
+  const cureData = {
+    'InstaCure #1': { nitritePct:6.25, nitratePct:0, naclPct:93.75, maxGPerKg:4.0 },
+    'InstaCure #2': { nitritePct:6.25, nitratePct:4.0, naclPct:89.75, maxGPerKg:4.0 }
+  };
+  (db.ingredients||[]).forEach(ing=>{
+    if(ing.category==='sal-curado' && cureData[ing.name]){
+      const d = cureData[ing.name];
+      if(ing.nitritePct===undefined){ ing.nitritePct = d.nitritePct; touched = true; }
+      if(ing.nitratePct===undefined){ ing.nitratePct = d.nitratePct; touched = true; }
+      if(ing.naclPct===undefined){ ing.naclPct = d.naclPct; touched = true; }
+      if(ing.maxGPerKg===undefined){ ing.maxGPerKg = d.maxGPerKg; touched = true; }
+    }
+  });
+  (db.types||[]).forEach(t=>{
+    (t.stages||[]).forEach(s=>{
+      if(s.kind==='Curado' && s.brine && s.brine.cureSalt===undefined){
+        s.brine.cureSalt = { ingredient:null, gPerKg:0 };
+        touched = true;
+      }
+      // Strip salt/cure-salt entries from Curado stage recipes (they belong to brine now)
+      if(s.kind==='Curado' && Array.isArray(s.recipe)){
+        const before = s.recipe.length;
+        s.recipe = s.recipe.filter(r=>{
+          const ing = db.ingredients.find(x=>x.name===r.ingredient);
+          return !ing || (ing.category!=='sal' && ing.category!=='sal-curado');
+        });
+        if(s.recipe.length !== before) touched = true;
+      }
+    });
+  });
   (db.types||[]).forEach(t=>(t.stages||[]).forEach(s=>{
     if(s.brine && s.brine.saltId && !s.brine.saltIngredient){
       s.brine.saltIngredient = legacy[s.brine.saltId] || 'Sal marina fina';
@@ -981,7 +1389,7 @@ function seedDB(){
       id:'stg_'+ti+'_'+si,
       kind: s.k, dEst: s.dEst,
       eb: s.eb||false, shape: s.shape||null,
-      brine: s.brine || (s.k==='Curado' ? {saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina'} : null),
+      brine: s.brine || (s.k==='Curado' ? {saltPct:2.8, waterPct:0, saltIngredient:'Sal marina fina', cureSalt:{ingredient:null, gPerKg:0}} : null),
       press: false,
       env: s.env||null,
       ph: s.ph||null,
@@ -1112,7 +1520,9 @@ function updateNavCounts(){
 }
 
 function render(){
+  if(SKIP_RENDER) return;
   updateNavCounts();
+  restoreSidebarState();
   const m = document.getElementById('main');
   if(view==='dashboard') m.innerHTML = viewDashboard();
   else if(view==='timeline') m.innerHTML = viewTimeline();
@@ -1126,6 +1536,22 @@ function render(){
 }
 
 function goto(v, opts={}){ view = v; if(opts.typeId) editingType = db.types.find(t=>t.id===opts.typeId) || null; if(opts.batchId) openBatchId = opts.batchId; render(); window.scrollTo(0,0); }
+function toggleSidebar(){
+  const app = document.getElementById('app-root');
+  const collapsed = app.classList.toggle('sidebar-collapsed');
+  try{ localStorage.setItem('laforet_sidebar_collapsed', collapsed?'1':'0'); }catch(e){}
+  const btn = document.getElementById('sidebar-toggle');
+  if(btn) btn.setAttribute('title', collapsed ? 'Mostrar menu' : 'Ocultar menu');
+}
+function restoreSidebarState(){
+  try{
+    const collapsed = localStorage.getItem('laforet_sidebar_collapsed')==='1';
+    const app = document.getElementById('app-root');
+    if(app && collapsed) app.classList.add('sidebar-collapsed');
+    const btn = document.getElementById('sidebar-toggle');
+    if(btn) btn.setAttribute('title', collapsed ? 'Mostrar menu' : 'Ocultar menu');
+  }catch(e){}
+}
 
 document.getElementById('nav').addEventListener('click', (e)=>{
   const a = e.target.closest('a[data-view]'); if(!a) return;
@@ -1520,6 +1946,56 @@ function latestBatchMeasurementDate(b){
   return latest;
 }
 /* MIGRATION: legacy b.weightLogs → distribute to first piece (best-effort) */
+function migrateBackfillBrineOnBatches(){
+  // For batches created before build14, the Curado stage may be missing brine.
+  // Try to backfill from the parent type. If not available, use a sensible default.
+  let touched = false;
+  (db.batches||[]).forEach(b=>{
+    const parentType = (db.types||[]).find(t=>t.id===b.typeId);
+    (b.stages||[]).forEach((s, si)=>{
+      if(s.kind==='Curado' && !s.brine){
+        let src = null;
+        if(parentType && parentType.stages){
+          // Find the corresponding Curado stage in the type (same index or first Curado)
+          src = parentType.stages[si] && parentType.stages[si].kind==='Curado'
+            ? parentType.stages[si]
+            : parentType.stages.find(x=>x.kind==='Curado');
+        }
+        if(src && src.brine){
+          s.brine = {
+            saltPct: src.brine.saltPct,
+            waterPct: src.brine.waterPct,
+            saltIngredient: src.brine.saltIngredient,
+            cureSalt: src.brine.cureSalt ? { ...src.brine.cureSalt } : { ingredient:null, gPerKg:0 }
+          };
+        } else {
+          s.brine = { saltPct:2.8, waterPct:0, saltIngredient: defaultCommonSaltName(), cureSalt:{ ingredient:null, gPerKg:0 } };
+        }
+        // Also backfill shape/eb if missing
+        if(s.shape===undefined && src) s.shape = src.shape || 'tubular';
+        if(s.eb===undefined && src) s.eb = src.eb || false;
+        touched = true;
+      }
+    });
+  });
+  if(touched){ console.log('Brine backfilled on existing batches'); saveDB(); }
+}
+function migrateStripSaltFromCureBatches(){
+  let touched = false;
+  (db.batches||[]).forEach(b=>{
+    (b.stages||[]).forEach(s=>{
+      if(s.kind==='Curado' && Array.isArray(s.recipe)){
+        const before = s.recipe.length;
+        s.recipe = s.recipe.filter(r=>{
+          const ing = db.ingredients.find(x=>x.name===r.ingredient);
+          return !ing || (ing.category!=='sal' && ing.category!=='sal-curado');
+        });
+        if(s.recipe.length !== before) touched = true;
+      }
+    });
+  });
+  if(touched){ console.log('Sales removidas de recetas de curado en lotes activos'); saveDB(); }
+}
 function migrateWeightLogsToPieces(){
   let migrated = 0;
   (db.batches||[]).forEach(b=>{
@@ -1581,17 +2057,43 @@ function renderStageCard(b, s, idx){
           <span class="tiny">${weightSt.label}</span>
         </div>` : ''}
 
-      ${s.recipe && s.recipe.length? `
-        <div class="divider-lbl">Receta escalada · sobre ${fmtG(b.pieces.reduce((sm,p)=>sm+p.initialWeight,0))} de carne</div>
-        <div class="recipe-scaled" style="margin-top:0">
-          ${s.recipe.map(r=>{
-            const ing = db.ingredients.find(i=>i.name===r.ingredient);
-            const totalKg = b.pieces.reduce((sm,p)=>sm+p.initialWeight,0)/1000;
-            const amount = r.amount * totalKg;
-            return `<div class="rt"><span class="n">${r.ingredient}${r.note?' <span class="tiny">('+r.note+')</span>':''}</span><span class="a">${fmt(amount,2)}<span class="u">${ing?.unit||'g'}</span></span></div>`;
-          }).join('')}
-        </div>
-      `:''}
+      ${(s.recipe && s.recipe.length) || (s.kind==='Curado' && s.brine) ? (()=>{
+        const totalKg = b.pieces.reduce((sm,p)=>sm+p.initialWeight,0)/1000;
+        const totalG = totalKg * 1000;
+        const isCurado = s.kind==='Curado' && s.brine;
+        let brineRows = '';
+        if(isCurado){
+          const meatG = totalG;
+          const rB = calcEqBrine(meatG, s.brine.saltPct, s.brine.waterPct, s.brine.saltIngredient, s.brine);
+          brineRows = `
+            <div class="rt auto-row">
+              <span class="n">${s.brine.saltIngredient||'Sal comun'} <span class="auto-badge">EQ Brine</span></span>
+              <span class="a">${fmt(rB.commonG,2)}<span class="u">g</span></span>
+            </div>
+            ${rB.cureG>0 && rB.cureIng ? `<div class="rt auto-row">
+              <span class="n">${rB.cureIng.name} <span class="auto-badge">EQ Brine</span></span>
+              <span class="a">${fmt(rB.cureG,2)}<span class="u">g</span></span>
+            </div>` : ''}
+            ${rB.waterG>0 ? `<div class="rt auto-row">
+              <span class="n">Agua destilada <span class="auto-badge">EQ Brine</span></span>
+              <span class="a">${fmt(rB.waterG,0)}<span class="u">ml</span></span>
+            </div>` : ''}
+          `;
+        }
+        const recipeRows = (s.recipe||[]).map(r=>{
+          const ing = db.ingredients.find(i=>i.name===r.ingredient);
+          const amount = r.amount * totalKg;
+          const unit = normalizeUnit(ing?.unit||'g');
+          return `<div class="rt"><span class="n">${r.ingredient}${r.note?' <span class="tiny">('+r.note+')</span>':''}</span><span class="a">${fmt(amount,2)}<span class="u">${unit}</span></span></div>`;
+        }).join('');
+        return `
+          <div class="divider-lbl">Receta escalada &middot; sobre ${fmtG(totalG)} (${fmt(totalKg,2)} kg) de carne</div>
+          <div class="recipe-scaled" style="margin-top:0">
+            ${brineRows}
+            ${recipeRows}
+          </div>
+        `;
+      })() : ''}
 
       ${s.kind==='Curado' && s.brine ? renderBrineForStage(b, s) : ''}
       ${s.inoc? renderInoculantForStage(b, s) : ''}
@@ -1614,31 +2116,184 @@ function renderStageCard(b, s, idx){
 function renderBrineForStage(b, s){
   const meatG = b.pieces.reduce((sm,p)=>sm+p.initialWeight,0);
   const br = s.brine;
-  const r = calcEqBrine(meatG, br.saltPct, br.waterPct, br.saltIngredient);
+  const r = calcEqBrine(meatG, br.saltPct, br.waterPct, br.saltIngredient, br);
+  const hasCure = r.cureG > 0 && r.cureIng;
+  const alertMsg = renderCureSafetyAlert(r);
+  const totalDays = totalCureProcessDaysBatch(b);
+  const residual = hasCure ? calcCureResidual({cureIng:r.cureIng, nitritePpm:r.nitritePpm, nitratePpm:r.nitratePpm}, totalDays, DEFAULT_CAVA_TEMP, DEFAULT_CAVA_PH) : null;
   return `
     <div class="divider-lbl">Equilibrium Brine · calculado sobre ${fmtG(meatG)}</div>
     <div class="brine-result">
-      <div class="br-cell"><div class="tiny">Sal (peso)</div><div class="br-v">${fmt(r.saltG,1)}<span class="u">g</span></div></div>
-      <div class="br-cell"><div class="tiny">Sal (volumen · ${r.salt.name})</div><div class="br-v">${fmt(r.saltTsp,1)}<span class="u">tsp</span></div></div>
-      <div class="br-cell"><div class="tiny">Agua a añadir</div><div class="br-v">${fmt(r.waterG,0)}<span class="u">g</span></div></div>
-      <div class="br-cell"><div class="tiny">Peso total salmuera</div><div class="br-v">${fmt(r.totalG,0)}<span class="u">g</span></div></div>
-      <div class="br-cell"><div class="tiny">Sal final</div><div class="br-v" style="color:var(--brand)">${fmt(r.finalPct,2)}<span class="u">%</span></div></div>
+      <div class="br-cell"><div class="tiny">Sal comun (${r.salt.name})</div><div class="br-v">${fmt(r.commonG,1)}<span class="u">g</span></div><div class="tiny">${fmt(r.commonTsp,1)} tsp</div></div>
+      ${hasCure ? `<div class="br-cell cure"><div class="tiny">Sal de cura (${r.cureIng.name})</div><div class="br-v" style="color:var(--brand)">${fmt(r.cureG,2)}<span class="u">g</span></div><div class="tiny">${fmt(r.cureTsp,2)} tsp</div></div>` : ''}
+      <div class="br-cell"><div class="tiny">Agua a anadir</div><div class="br-v">${fmt(r.waterG,0)}<span class="u">g</span></div></div>
+      <div class="br-cell"><div class="tiny">Peso total mezcla</div><div class="br-v">${fmt(r.totalG,0)}<span class="u">g</span></div></div>
+      <div class="br-cell"><div class="tiny">Sal final total</div><div class="br-v" style="color:var(--brand)">${fmt(r.finalPct,2)}<span class="u">%</span></div></div>
     </div>
-    <div class="tiny" style="margin-top:6px">Fórmula: Sal = (carne + agua) × %/100 · mezclar, empacar al vacío, refrigerar a 1–4 °C. Voltear la bolsa cada 12 h.</div>
+    ${hasCure ? `
+      <div class="cure-metrics">
+        <span class="pill ${r.cureLevel}"><b>Nitrito (NO<sub>2</sub><sup>-</sup>)</b> ${fmt(r.nitritePpm,0)} ppm <span class="tiny">/ max USDA ${NITRITE_MAX_PPM}</span></span>
+        ${r.nitratePpm>0 ? `<span class="pill ${r.nitratePpm>NITRATE_MAX_PPM?'red':(r.nitratePpm>1500?'yellow':'green')}"><b>Nitrato (NO<sub>3</sub><sup>-</sup>)</b> ${fmt(r.nitratePpm,0)} ppm <span class="tiny">/ max USDA ${NITRATE_MAX_PPM}</span></span>` : ''}
+        <span class="pill info"><b>Dosis</b> ${br.cureSalt.gPerKg} g/kg <span class="tiny">/ max ${r.cureIng.maxGPerKg||4}</span></span>
+      </div>
+    ` : ''}
+    ${alertMsg}
+    ${residual ? renderResidualPanel(residual, totalDays, r.nitritePpm, r.nitratePpm) : ''}
+    <div class="tiny" style="margin-top:6px">Formula: Sal_total = (carne + agua) x %/100. La sal comun compensa el NaCl que aporta la sal de cura. Mezclar todas las sales, empacar al vacio, refrigerar a 1-4 C. Voltear cada 12 h.</div>
   `;
+}
+/* Residual panel: shows ingoing vs residual after full process,
+   plus a small decay curve SVG. */
+function renderResidualPanel(res, totalDays, ingoingNitrite, ingoingNitrate){
+  const isLong = totalDays >= 30;
+  const nitriteSafeResidual = res.residualNitrite <= 50;   // most regulations cap residual at 50-80 ppm
+  const nitrateSafeResidual = res.residualNitrate <= 200;
+  const level = (nitriteSafeResidual && nitrateSafeResidual) ? 'green' : (res.residualNitrite <= 100 ? 'yellow' : 'red');
+  return `
+    <div class="residual-panel">
+      <div class="rp-hd">
+        <span class="k">Degradacion durante el proceso</span>
+        <span class="tiny">Modelo cinetico Nordin @ ${res.tempC} C, pH ${res.ph} · ${totalDays} dias totales</span>
+      </div>
+      <div class="rp-grid">
+        <div class="rp-cell">
+          <div class="tiny">Nitrito ingoing</div>
+          <div class="rp-v" style="color:var(--muted)">${fmt(ingoingNitrite,0)} <span class="u">ppm</span></div>
+        </div>
+        <div class="rp-arrow">&rarr;</div>
+        <div class="rp-cell rp-final ${level}">
+          <div class="tiny">Nitrito residual estimado</div>
+          <div class="rp-v">${fmt(res.residualNitrite,1)} <span class="u">ppm</span></div>
+          <div class="tiny">-${fmt(res.reductionNitrite,0)}% (t½ ${fmt(res.halfLifeNitrite,0)} d)</div>
+        </div>
+        ${ingoingNitrate>0 ? `
+          <div class="rp-cell">
+            <div class="tiny">Nitrato ingoing</div>
+            <div class="rp-v" style="color:var(--muted)">${fmt(ingoingNitrate,0)} <span class="u">ppm</span></div>
+          </div>
+          <div class="rp-arrow">&rarr;</div>
+          <div class="rp-cell rp-final ${nitrateSafeResidual?'green':'yellow'}">
+            <div class="tiny">Nitrato residual estimado</div>
+            <div class="rp-v">${fmt(res.residualNitrate,1)} <span class="u">ppm</span></div>
+            <div class="tiny">-${fmt(res.reductionNitrate,0)}% (t½ ${fmt(res.halfLifeNitrate,0)} d) · reduce a NO2 lento</div>
+          </div>
+        ` : ''}
+      </div>
+      ${renderDecayChart(ingoingNitrite, ingoingNitrate, totalDays, res.tempC, res.ph)}
+      <div class="tiny rp-note">
+        ${isLong ? `<b>Proceso largo (${totalDays} d):</b> el nitrito residual se degrada exponencialmente por conversion a oxido nitrico (que fija el color y sabor curado), y una fraccion se re-oxida a <b>nitrato</b>, la forma estable y segura para consumo presente en jamones anejados. Comparacion: productos comerciales US promedian ${RESIDUAL_TYPICAL_NITRITE_PPM} ppm nitrito y ${RESIDUAL_TYPICAL_NITRATE_PPM} ppm nitrato residuales &mdash; el nitrato acumulado no representa riesgo a estos niveles y es caracteristico de curados largos.` : `<b>Proceso corto (${totalDays} d):</b> gran parte del nitrito ingoing sigue presente al final. Considera consumo/coccion pronta.`}
+      </div>
+    </div>
+  `;
+}
+/* Small SVG chart showing nitrite (and nitrate if present) decay over time */
+function renderDecayChart(ingoingNit, ingoingNat, totalDays, tempC, ph){
+  const w = 560, h = 130, pad = { l:44, r:12, t:12, b:22 };
+  const iw = w - pad.l - pad.r, ih = h - pad.t - pad.b;
+  const xMax = Math.max(totalDays, 30);
+  const yMax = Math.max(ingoingNit||0, ingoingNat||0, 50) * 1.05;
+  const yMin = 0;
+  const x = d => pad.l + iw * (d/xMax);
+  const y = v => pad.t + ih * (1 - (v-yMin)/(yMax-yMin));
+  const N = 60;
+  const points = [];
+  for(let i=0; i<=N; i++){
+    const d = xMax * i/N;
+    const nit = calcResidualNitrite(ingoingNit||0, d, tempC, ph) + nitriteFromNitrateReduction(ingoingNat||0, d, tempC, ph);
+    const nat = calcResidualNitrate(ingoingNat||0, d, tempC, ph);
+    points.push({d, nit, nat});
+  }
+  const pathNit = 'M '+points.map(p=>`${x(p.d).toFixed(1)},${y(p.nit).toFixed(1)}`).join(' L ');
+  const pathNat = ingoingNat>0 ? 'M '+points.map(p=>`${x(p.d).toFixed(1)},${y(p.nat).toFixed(1)}`).join(' L ') : '';
+  const gridY = [0, yMax*0.25, yMax*0.5, yMax*0.75, yMax];
+  const totalX = x(totalDays);
+  return `<svg class="decay-chart" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin-top:8px">
+    ${gridY.map(v=>`<line x1="${pad.l}" y1="${y(v)}" x2="${w-pad.r}" y2="${y(v)}" stroke="var(--line)" stroke-width="0.5"/><text x="${pad.l-4}" y="${y(v)+3}" fill="var(--muted)" font-size="8.5" text-anchor="end" font-family="JetBrains Mono">${v.toFixed(0)}</text>`).join('')}
+    <line x1="${totalX}" y1="${pad.t}" x2="${totalX}" y2="${h-pad.b}" stroke="var(--brand)" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.6"/>
+    <text x="${totalX}" y="${h-pad.b+13}" fill="var(--brand)" font-size="9" text-anchor="middle" font-family="JetBrains Mono">${totalDays} d</text>
+    <text x="${pad.l}" y="${h-pad.b+13}" fill="var(--muted)" font-size="9" text-anchor="start" font-family="JetBrains Mono">0</text>
+    <text x="${w-pad.r}" y="${h-pad.b+13}" fill="var(--muted)" font-size="9" text-anchor="end" font-family="JetBrains Mono">${xMax.toFixed(0)} d</text>
+    <path d="${pathNit}" fill="none" stroke="#e08662" stroke-width="1.6"/>
+    ${pathNat?`<path d="${pathNat}" fill="none" stroke="var(--sage)" stroke-width="1.6" stroke-dasharray="4,2"/>`:''}
+    <text x="${w-pad.r-6}" y="${pad.t+11}" fill="#e08662" font-size="9" text-anchor="end" font-family="JetBrains Mono">NO2-</text>
+    ${ingoingNat>0?`<text x="${w-pad.r-6}" y="${pad.t+22}" fill="var(--sage)" font-size="9" text-anchor="end" font-family="JetBrains Mono">NO3-</text>`:''}
+  </svg>`;
+}
+function renderCureSafetyAlert(r){
+  if(r.cureLevel==='gray') return '';
+  if(r.cureLevel==='red'){
+    const reasons = [];
+    if(r.nitritePpm > NITRITE_MAX_PPM) reasons.push(`Nitrito ${fmt(r.nitritePpm,0)} ppm supera el limite USDA (${NITRITE_MAX_PPM} ppm)`);
+    if(r.nitratePpm > NITRATE_MAX_PPM) reasons.push(`Nitrato ${fmt(r.nitratePpm,0)} ppm supera el limite USDA (${NITRATE_MAX_PPM} ppm)`);
+    if(r.cureG > r.maxCureG) reasons.push(`Dosis supera el maximo del fabricante`);
+    return `<div class="hazard"><span class="skull">&#9760;</span><div class="msg"><b>Peligro sanitario:</b> ${reasons.join(' - ')}. Reducir la dosis de sal de cura antes de aplicar.</div></div>`;
+  }
+  if(r.cureLevel==='yellow'){
+    return `<div class="cure-warn"><span>&#9888;</span><div>Nitrito elevado (${fmt(r.nitritePpm,0)} ppm). Legal pero por encima del objetivo tipico (<=${NITRITE_TARGET_PPM} ppm). Considera bajar la dosis si el curado es corto.</div></div>`;
+  }
+  return `<div class="cure-ok"><span>&#10003;</span><div>Nivel de nitrito seguro: ${fmt(r.nitritePpm,0)} ppm (objetivo <=${NITRITE_TARGET_PPM} ppm, max ${NITRITE_MAX_PPM}).</div></div>`;
 }
 
 function renderInoculantForStage(b, s){
   const totalKg = b.pieces.reduce((sm,p)=>sm+p.initialWeight,0)/1000;
-  const cultureAmount = s.inoc.a * totalKg;
-  const waterAmount = s.inoc.water * totalKg;
+  const totalLb = totalKg / LB_TO_KG;
+  const ing = db.ingredients.find(x=>x.name===s.inoc.i);
+  const scaled = ing ? scaleInoculant(ing, totalKg) : null;
+  const legacyCulture = s.inoc.a * totalKg;
+  const legacyWater = s.inoc.water * totalKg;
   return `
-    <div class="divider-lbl">Inoculación</div>
-    <div class="recipe-scaled" style="margin-top:0;border-color:var(--sage)">
-      <div class="rt"><span class="n">${s.inoc.i}</span><span class="a">${fmt(cultureAmount,3)}<span class="u">g</span></span></div>
-      <div class="rt"><span class="n">Agua destilada / no-clorada</span><span class="a">${fmt(waterAmount,1)}<span class="u">${s.inoc.waterUnit?.split('/')[0]||'ml'}</span></span></div>
-      <div class="rt"><span class="n">Tiempo de activación</span><span class="a">${s.inoc.act}<span class="u">min</span></span></div>
-      ${s.inoc.note?`<div class="tiny" style="margin-top:6px;color:var(--muted)">${s.inoc.note}</div>`:''}
+    <div class="divider-lbl">Inoculacion</div>
+    <div class="inoc-panel">
+      <div class="inoc-hd">
+        <span class="in-name">&#10022; ${s.inoc.i}</span>
+        <span class="tiny">${fmt(totalKg,2)} kg (${fmt(totalLb,2)} lb) de carne total</span>
+      </div>
+      ${scaled ? `
+        <div class="inoc-instruction">
+          Rehidratar <b>${fmtFrac(scaled.starterTsp)} cucharadita${scaled.starterTsp>=1.5?'s':''}</b> de starter
+          en <b>${fmt(scaled.waterMl,0)} ml</b> de agua destilada
+          para <b>${fmt(totalKg,2)} kg</b> de carne/grasa.
+          Dejar rehidratar durante <b>${scaled.rehydMin} minutos</b>.
+        </div>
+        <div class="inoc-recipe">
+          <div class="ir-item">
+            <div class="ir-k">Cultivo iniciador</div>
+            <div class="ir-v"><b>${fmtFrac(scaled.starterTsp)}</b> <span class="u">tsp</span></div>
+            <div class="tiny">${fmt(scaled.starterMl,1)} ml</div>
+          </div>
+          <div class="ir-plus">+</div>
+          <div class="ir-item">
+            <div class="ir-k">Agua destilada / no clorada</div>
+            <div class="ir-v"><b>${fmt(scaled.waterMl,0)}</b> <span class="u">ml</span></div>
+            <div class="tiny">${fmtFrac(scaled.waterCups)} cup</div>
+          </div>
+          <div class="ir-plus">&darr;</div>
+          <div class="ir-item ir-time">
+            <div class="ir-k">Rehidratar</div>
+            <div class="ir-v"><b>${scaled.rehydMin}</b> <span class="u">min</span></div>
+            <div class="tiny">temp. ambiente</div>
+          </div>
+        </div>
+        <div class="tiny inoc-ratio">Proporcion base: ${fmtFrac(scaled.tspPer5lb)} cucharadita starter + ${fmt(scaled.mlPer5lb,0)} ml agua destilada por cada 2,27 kg (5 lb) de carne/grasa</div>
+      ` : `
+        <div class="inoc-recipe">
+          <div class="ir-item">
+            <div class="ir-k">Cultivo (formato legado)</div>
+            <div class="ir-v">${fmt(legacyCulture,3)} <span class="u">g</span></div>
+          </div>
+          <div class="ir-plus">+</div>
+          <div class="ir-item">
+            <div class="ir-k">Agua</div>
+            <div class="ir-v">${fmt(legacyWater,1)} <span class="u">ml</span></div>
+          </div>
+          <div class="ir-plus">&darr;</div>
+          <div class="ir-item ir-time">
+            <div class="ir-k">Activacion</div>
+            <div class="ir-v">${s.inoc.act||30} <span class="u">min</span></div>
+          </div>
+        </div>
+        <div class="tiny inoc-ratio" style="color:var(--amber)">Este cultivo no tiene datos de rehidratacion. Editalo en Ingredientes para valores precisos.</div>
+      `}
     </div>
   `;
 }
@@ -1999,19 +2654,28 @@ function renderStageEditor(t, s, i){
       ${meta.recipe!=='none' ? renderRecipeEditor(t, s, i) : ''}
 
       <div class="divider-lbl">Inoculante (cultivo/hongo)</div>
-      ${s.inoc? `
-        <div class="grid grid-4" style="gap:10px">
+      ${s.inoc? (()=>{
+        const cultureIng = db.ingredients.find(x=>x.name===s.inoc.i);
+        const hasSpec = cultureIng && (+cultureIng.starterTsp > 0);
+        return `
+        <div class="grid grid-2" style="gap:10px;margin-bottom:8px">
           <div><label>Cultivo</label>
             <select onchange="updateInoc('${t.id}',${i},'i',this.value)">
-              <option value="">— ninguno —</option>
+              <option value="">&mdash; ninguno &mdash;</option>
               ${db.ingredients.filter(x=>x.category==='cultivo').map(x=>`<option ${s.inoc.i===x.name?'selected':''}>${x.name}</option>`).join('')}
             </select>
+            ${hasSpec ? `<div class="tiny">Base: ${fmtFrac(cultureIng.starterTsp)} cucharadita starter + ${fmt((+cultureIng.waterMlPer5lb)||((+cultureIng.waterCupsPer5lb||0)*236.588),0)} ml agua por 2,27 kg (5 lb) - rehidratar ${cultureIng.rehydMin||30} min</div>` : `<div class="tiny" style="color:var(--amber)">Este cultivo no tiene proporciones de rehidratacion. <a onclick="goto('ingredients')" style="color:var(--brand);cursor:pointer">Editar &rarr;</a></div>`}
           </div>
-          <div><label>Cantidad (g/kg)</label><input type="number" step="0.01" value="${s.inoc.a}" oninput="updateInoc('${t.id}',${i},'a',+this.value)"></div>
-          <div><label>Agua (ml/kg)</label><input type="number" step="0.5" value="${s.inoc.water}" oninput="updateInoc('${t.id}',${i},'water',+this.value)"></div>
-          <div><label>Activación (min)</label><input type="number" step="1" value="${s.inoc.act}" oninput="updateInoc('${t.id}',${i},'act',+this.value)"></div>
+          <div><label>Preview sobre 1 kg de carne</label>
+            <div class="inoc-preview-mini">
+              ${cultureIng ? (()=>{
+                const s1kg = scaleInoculant(cultureIng, 1);
+                return s1kg ? `<span class="chip-num">${fmtFrac(s1kg.starterTsp,3)} tsp starter</span> <span class="chip-num">${fmt(s1kg.waterMl,1)} ml agua</span>` : '<span class="tiny">Sin datos</span>';
+              })() : '<span class="tiny">Sin cultivo seleccionado</span>'}
+            </div>
+          </div>
         </div>
-      ` : `<button class="btn sm ghost" onclick="addInoc('${t.id}',${i})">＋ Agregar inoculante</button>`}
+      `; })() : `<button class="btn sm ghost" onclick="addInoc('${t.id}',${i})">&#43; Agregar inoculante</button>`}
       ${s.inoc? `<div class="row" style="margin-top:8px"><button class="btn sm danger" onclick="removeInoc('${t.id}',${i})">Quitar inoculante</button></div>`:''}
     </div>
   `;
@@ -2019,53 +2683,256 @@ function renderStageEditor(t, s, i){
 
 
 function renderBrineEditor(t, s, i){
-  const br = s.brine || {saltPct:2.8, waterPct:0, saltIngredient: defaultSaltName()};
-  const salts = saltIngredients();
-  const currentName = br.saltIngredient || defaultSaltName();
+  const br = s.brine || {saltPct:2.8, waterPct:0, saltIngredient: defaultCommonSaltName(), cureSalt:{ingredient:null, gPerKg:0}};
+  if(!br.cureSalt) br.cureSalt = {ingredient:null, gPerKg:0};
+  const commonSalts = commonSaltIngredients();
+  const cureSalts = cureSaltIngredients();
+  const currentName = br.saltIngredient || defaultCommonSaltName();
   const salt = saltByName(currentName) || {name: currentName, gPerTsp: DEFAULT_G_PER_TSP};
-  // preview on a reference 1000g piece so the artisan sees the ratio
-  const demo = calcEqBrine(1000, br.saltPct, br.waterPct, currentName);
+  const cureName = br.cureSalt.ingredient || '';
+  const cureIng = cureName ? cureSaltByName(cureName) : null;
+  const demo = calcEqBrine(1000, br.saltPct, br.waterPct, currentName, br);
+  const totalSaltG = demo.commonG + demo.cureG;
+  const commonShare = totalSaltG > 0 ? (demo.commonG/totalSaltG)*100 : 100;
+  const cureShare = totalSaltG > 0 ? (demo.cureG/totalSaltG)*100 : 0;
   return `
-    <div class="divider-lbl">Equilibrium Brine · parámetros de sal</div>
-    <div class="brine-box">
-      <div class="grid grid-3" style="gap:10px">
-        <div><label>Sal objetivo %</label>
-          <input type="number" step="0.1" min="0.5" max="6" value="${br.saltPct}" oninput="updateBrine('${t.id}',${i},'saltPct',+this.value)">
-          <div class="tiny">1–2% típico · 2.5% tope sabor · 2.8–3% curado</div>
+    <div class="divider-lbl">Equilibrium Brine - Configuracion de Sales</div>
+    <div class="brine-v2">
+
+      <!-- ─── PANEL 1: Objetivo Global ─── -->
+      <div class="bv-objective">
+        <div class="bv-obj-main">
+          <label class="bv-lbl">Sal Total Objetivo</label>
+          <div class="bv-slider-row">
+            <input type="range" min="0.5" max="5" step="0.1" value="${br.saltPct}" oninput="updateBrine('${t.id}',${i},'saltPct',+this.value)" class="bv-range">
+            <input type="number" step="0.1" min="0.5" max="6" value="${br.saltPct}" oninput="updateBrine('${t.id}',${i},'saltPct',+this.value)" class="bv-num-inline">
+            <span class="bv-unit">%</span>
+          </div>
+          <div class="tiny">Concentracion final de NaCl en la carne. Tipico curado: <b>2.8 - 3.0%</b></div>
         </div>
-        <div><label>Sal (desde Ingredientes)</label>
-          ${salts.length ? `<select onchange="updateBrine('${t.id}',${i},'saltIngredient',this.value)">
-            ${salts.map(st=>`<option value="${escapeAttr(st.name)}" ${currentName===st.name?'selected':''}>${st.name} · ${(+st.gPerTsp||DEFAULT_G_PER_TSP)}g/tsp</option>`).join('')}
-          </select>
-          <div class="tiny">${salt.note || `${(+salt.gPerTsp||DEFAULT_G_PER_TSP)} g por tsp`} · <a onclick="goto('ingredients')" style="color:var(--brand);cursor:pointer">editar densidades</a></div>`
-          : `<div class="tiny" style="color:var(--amber)">No hay sales definidas. <a onclick="goto('ingredients')" style="color:var(--brand);cursor:pointer">Crear una en Ingredientes →</a></div>`}
-        </div>
-        <div><label>Agua añadida % (0–50)</label>
-          <input type="number" step="1" min="0" max="50" value="${br.waterPct}" oninput="updateBrine('${t.id}',${i},'waterPct',+this.value)">
-          <div class="tiny">0% = curado seco al vacío · 10–25% distribuye mejor</div>
+        <div class="bv-obj-water">
+          <label class="bv-lbl">Agua Anadida</label>
+          <div class="bv-slider-row">
+            <input type="range" min="0" max="50" step="1" value="${br.waterPct}" oninput="updateBrine('${t.id}',${i},'waterPct',+this.value)" class="bv-range">
+            <input type="number" step="1" min="0" max="50" value="${br.waterPct}" oninput="updateBrine('${t.id}',${i},'waterPct',+this.value)" class="bv-num-inline">
+            <span class="bv-unit">%</span>
+          </div>
+          <div class="tiny">0% = seco al vacio &middot; 10-25% mejora distribucion</div>
         </div>
       </div>
-      <div class="brine-demo">
-        <span class="tiny">Sobre 1 kg de carne de referencia:</span>
-        <span class="chip-num">Sal <b>${fmt(demo.saltG,1)} g</b> (${fmt(demo.saltTsp,1)} tsp)</span>
-        ${br.waterPct>0?`<span class="chip-num">Agua <b>${fmt(demo.waterG,0)} g</b></span>`:''}
-        <span class="chip-num">Sal final <b>${fmt(demo.finalPct,2)}%</b></span>
+
+      <!-- ─── PANEL 2: Distribucion (dos submodulos) ─── -->
+      <div class="bv-lbl-section">Distribucion en dos sales</div>
+      <div class="bv-split">
+
+        <!-- CARD IZQ: Sal Comun -->
+        <div class="bv-card bv-card-common">
+          <div class="bv-card-hd">
+            <div class="bv-card-icon">&#9679;</div>
+            <div>
+              <div class="bv-card-title">Sal Comun</div>
+              <div class="bv-card-sub">NaCl puro (cloruro de sodio)</div>
+            </div>
+          </div>
+          <div class="bv-card-body">
+            ${commonSalts.length ? `
+              <label class="bv-lbl-mini">Tipo de sal</label>
+              <select onchange="updateBrine('${t.id}',${i},'saltIngredient',this.value)" class="bv-select">
+                ${commonSalts.map(st=>`<option value="${escapeAttr(st.name)}" ${currentName===st.name?'selected':''}>${st.name}</option>`).join('')}
+              </select>
+              <div class="tiny bv-hint">${salt.note ? salt.note : `Densidad: ${(+salt.gPerTsp||DEFAULT_G_PER_TSP)} g por cucharadita`}</div>
+              <div class="bv-card-metric">
+                <span class="tiny">Cantidad por kg de carne</span>
+                <div class="bv-metric-v"><b>${fmt(demo.commonG,1)}</b> <span class="u">g</span> <span class="tiny">(${fmt(demo.commonTsp,1)} tsp)</span></div>
+                <div class="bv-share-bar"><div class="bv-share-fill common" style="width:${commonShare.toFixed(0)}%"></div></div>
+                <div class="tiny">${commonShare.toFixed(0)}% del total de sal</div>
+              </div>
+            ` : `<div class="tiny" style="color:var(--amber)">No hay sales comunes en el catalogo. <a onclick="goto('ingredients')" style="color:var(--brand);cursor:pointer">Crear una &rarr;</a></div>`}
+          </div>
+        </div>
+
+        <!-- CARD DER: Sal de Cura -->
+        <div class="bv-card bv-card-cure ${cureName?'active':''}">
+          <div class="bv-card-hd">
+            <div class="bv-card-icon">&#10022;</div>
+            <div>
+              <div class="bv-card-title">Sal de Cura</div>
+              <div class="bv-card-sub">Aporta nitrito (NO<sub>2</sub><sup>-</sup>) y/o nitrato (NO<sub>3</sub><sup>-</sup>)</div>
+            </div>
+          </div>
+          <div class="bv-card-body">
+            ${cureSalts.length ? `
+              <label class="bv-lbl-mini">Tipo</label>
+              <select onchange="updateCureSalt('${t.id}',${i},'ingredient',this.value)" class="bv-select">
+                <option value="" ${!cureName?'selected':''}>&mdash; Sin sal de cura &mdash;</option>
+                ${cureSalts.map(cs=>`<option value="${escapeAttr(cs.name)}" ${cureName===cs.name?'selected':''}>${cs.name}</option>`).join('')}
+              </select>
+              ${cureIng ? `<div class="tiny bv-hint">Composicion: <b>${(+cureIng.nitritePct||0)}%</b> nitrito${cureIng.nitratePct>0?` &middot; <b>${cureIng.nitratePct}%</b> nitrato`:''} &middot; <b>${(+cureIng.naclPct||0)}%</b> NaCl</div>` : `<div class="tiny bv-hint">Opcional. Recomendada para seguridad microbiologica (previene botulismo).</div>`}
+              ${cureName ? `
+                <label class="bv-lbl-mini" style="margin-top:10px">Dosis (g por kg de carne)</label>
+                <div class="bv-slider-row">
+                  <input type="range" min="0" max="${cureIng?.maxGPerKg||4}" step="0.1" value="${br.cureSalt.gPerKg||0}" oninput="updateCureSalt('${t.id}',${i},'gPerKg',+this.value)" class="bv-range">
+                  <input type="number" step="0.1" min="0" max="10" value="${br.cureSalt.gPerKg||0}" oninput="updateCureSalt('${t.id}',${i},'gPerKg',+this.value)" class="bv-num-inline">
+                  <span class="bv-unit">g/kg</span>
+                </div>
+                <div class="tiny">Tipico: 2.5 g/kg &middot; Max fabricante: ${cureIng?.maxGPerKg||4} g/kg</div>
+                <div class="bv-card-metric">
+                  <span class="tiny">Cantidad por kg de carne</span>
+                  <div class="bv-metric-v"><b>${fmt(demo.cureG,2)}</b> <span class="u">g</span> <span class="tiny">(aporta ${fmt(demo.naclFromCure,2)} g NaCl)</span></div>
+                  <div class="bv-share-bar"><div class="bv-share-fill cure" style="width:${cureShare.toFixed(0)}%"></div></div>
+                  <div class="tiny">${cureShare.toFixed(0)}% del total de sal</div>
+                </div>
+                <div class="bv-ppm">
+                  <div class="bv-ppm-item ${demo.cureLevel}">
+                    <span class="bv-ppm-k">Nitrito <span class="tiny">(NO<sub>2</sub><sup>-</sup>)</span></span>
+                    <span class="bv-ppm-v">${fmt(demo.nitritePpm,0)} <span class="u">ppm</span></span>
+                  </div>
+                  ${demo.nitratePpm>0 ? `<div class="bv-ppm-item ${demo.nitratePpm>NITRATE_MAX_PPM?'red':(demo.nitratePpm>1500?'yellow':'green')}">
+                    <span class="bv-ppm-k">Nitrato <span class="tiny">(NO<sub>3</sub><sup>-</sup>)</span></span>
+                    <span class="bv-ppm-v">${fmt(demo.nitratePpm,0)} <span class="u">ppm</span></span>
+                  </div>` : ''}
+                </div>
+              ` : ''}
+            ` : `<div class="tiny" style="color:var(--amber)">Sin sales de cura en catalogo. <a onclick="goto('ingredients')" style="color:var(--brand);cursor:pointer">Anadir &rarr;</a></div>`}
+          </div>
+        </div>
       </div>
+
+      <!-- ─── PANEL 3: Resumen Final ─── -->
+      <div class="bv-summary">
+        <div class="bv-summary-hd">
+          <span class="bv-summary-title">Resumen sobre 1 kg de carne</span>
+          <span class="tiny">Escala directamente al peso real del lote</span>
+        </div>
+        <div class="bv-summary-grid">
+          <div class="bv-sum-cell">
+            <div class="tiny">Sal comun</div>
+            <div class="bv-sum-v">${fmt(demo.commonG,1)}<span class="u">g</span></div>
+          </div>
+          <div class="bv-sum-op">+</div>
+          <div class="bv-sum-cell">
+            <div class="tiny">Sal de cura</div>
+            <div class="bv-sum-v">${fmt(demo.cureG,2)}<span class="u">g</span></div>
+          </div>
+          <div class="bv-sum-op">=</div>
+          <div class="bv-sum-cell bv-sum-total">
+            <div class="tiny">Sal total (peso)</div>
+            <div class="bv-sum-v">${fmt(totalSaltG,2)}<span class="u">g</span></div>
+          </div>
+          <div class="bv-sum-op">&rarr;</div>
+          <div class="bv-sum-cell bv-sum-final">
+            <div class="tiny">NaCl en carne</div>
+            <div class="bv-sum-v">${fmt(demo.finalPct,2)}<span class="u">%</span></div>
+          </div>
+        </div>
+        ${br.waterPct>0 ? `<div class="tiny bv-summary-water">+ ${fmt(demo.waterG,0)} g de agua destilada (${br.waterPct}% del peso de la carne)</div>` : ''}
+      </div>
+
+      ${demo.cureG>0 ? renderTypeResidualPreview(t, demo) : ''}
     </div>
   `;
+}
+/* Type-editor residual preview: uses total dEst of ALL stages, warns if short-cure with too much nitrite */
+function renderTypeResidualPreview(t, demo){
+  const totalDays = totalCureProcessDays(t);
+  if(!totalDays) return '';
+  const res = calcCureResidual({cureIng:demo.cureIng, nitritePpm:demo.nitritePpm, nitratePpm:demo.nitratePpm}, totalDays, DEFAULT_CAVA_TEMP, DEFAULT_CAVA_PH);
+  if(!res) return '';
+  const isLong = totalDays >= 30;
+  const usingNitrateSaltForShort = demo.nitratePpm > 0 && totalDays < 30;
+  const usingNitriteOnlyForLong = demo.nitratePpm === 0 && totalDays > 60;
+  return `
+    <div class="residual-preview">
+      <div class="rp-hd">
+        <span class="k">Estimacion al Finalizar el Proceso Completo</span>
+        <span class="tiny">${totalDays} dias totales (suma de todas las etapas) @ ${res.tempC} C, pH ${res.ph}</span>
+      </div>
+      <div class="bv-res-legend">
+        <span class="tiny"><b>NO<sub>2</sub><sup>-</sup></b> = nitrito (agente activo antimicrobiano, se degrada con el tiempo)</span>
+        <span class="tiny"><b>NO<sub>3</sub><sup>-</sup></b> = nitrato (forma estable, reservorio de nitrito en curas largas)</span>
+      </div>
+      <div class="rp-mini">
+        <div class="chip-res-v2">
+          <div class="cr-label"><b>Nitrito</b> (NO<sub>2</sub><sup>-</sup>)</div>
+          <div class="cr-flow"><span class="cr-in">${fmt(demo.nitritePpm,0)} ppm inicial</span> &rarr; <span class="cr-out">${fmt(res.residualNitrite,1)} ppm residual</span></div>
+          <div class="tiny cr-drop">Reduccion: -${fmt(res.reductionNitrite,0)}%</div>
+        </div>
+        ${demo.nitratePpm>0 ? `
+        <div class="chip-res-v2">
+          <div class="cr-label"><b>Nitrato</b> (NO<sub>3</sub><sup>-</sup>)</div>
+          <div class="cr-flow"><span class="cr-in">${fmt(demo.nitratePpm,0)} ppm inicial</span> &rarr; <span class="cr-out">${fmt(res.residualNitrate,1)} ppm residual</span></div>
+          <div class="tiny cr-drop">Reduccion: -${fmt(res.reductionNitrate,0)}%</div>
+        </div>` : ''}
+      </div>
+      ${usingNitrateSaltForShort ? `<div class="cure-warn" style="margin-top:8px"><span>&#9888;</span><div>Usando InstaCure #2 (con nitrato) en un proceso corto (${totalDays} d). El nitrato apenas se convierte y queda residual alto. Considera InstaCure #1 para procesos <30 d.</div></div>` : ''}
+      ${usingNitriteOnlyForLong ? `<div class="cure-warn" style="margin-top:8px"><span>&#9888;</span><div>Usando InstaCure #1 (solo nitrito) en un proceso largo (${totalDays} d). El nitrito se agota temprano y pierde efecto antimicrobiano. Considera InstaCure #2 (con nitrato reservorio) para procesos >60 d.</div></div>` : ''}
+      ${isLong && !usingNitrateSaltForShort && !usingNitriteOnlyForLong ? `<div class="cure-ok" style="margin-top:8px"><span>&#10003;</span><div>Combinacion adecuada: sal de cura correcta para la duracion del proceso. Residuales dentro de rangos comerciales tipicos (${RESIDUAL_TYPICAL_NITRITE_PPM} ppm nitrito, ${RESIDUAL_TYPICAL_NITRATE_PPM} ppm nitrato en promedio US).</div></div>` : ''}
+    </div>
+  `;
+}
+function updateCureSalt(typeId, idx, field, value){
+  const t = db.types.find(x=>x.id===typeId);
+  const st = t.stages[idx];
+  if(!st.brine) st.brine = {saltPct:2.8, waterPct:0, saltIngredient: defaultCommonSaltName(), cureSalt:{ingredient:null, gPerKg:0}};
+  if(!st.brine.cureSalt) st.brine.cureSalt = {ingredient:null, gPerKg:0};
+  if(field==='ingredient' && !value){
+    st.brine.cureSalt.ingredient = null;
+    st.brine.cureSalt.gPerKg = 0;
+  } else {
+    st.brine.cureSalt[field] = value;
+    if(field==='ingredient' && (!st.brine.cureSalt.gPerKg || st.brine.cureSalt.gPerKg===0)){
+      st.brine.cureSalt.gPerKg = 2.5;
+    }
+  }
+  saveDB(); render();
 }
 
 function updateBrine(typeId, idx, field, value){
   const t = db.types.find(x=>x.id===typeId);
-  if(!t.stages[idx].brine) t.stages[idx].brine = {saltPct:2.8, waterPct:0, saltIngredient: defaultSaltName()};
+  if(!t.stages[idx].brine) t.stages[idx].brine = {saltPct:2.8, waterPct:0, saltIngredient: defaultSaltName(), cureSalt:{ingredient:null, gPerKg:0}};
   t.stages[idx].brine[field] = value;
   saveDB(); render();
 }
 
+function renderBrineAutoRowsForType(t, s){
+  if(s.kind !== 'Curado' || !s.brine) return '';
+  // Show per-kg values (base) for reference
+  const b = s.brine;
+  const cure = b.cureSalt || {ingredient:null, gPerKg:0};
+  const cureIng = cure.ingredient ? cureSaltByName(cure.ingredient) : null;
+  const demo = calcEqBrine(1000, b.saltPct, b.waterPct, b.saltIngredient, b);
+  return `
+    <div class="auto-recipe-block">
+      <div class="tiny auto-recipe-hd"><b>Sales calculadas por EQ Brine</b> &middot; valores por kg de carne</div>
+      <div class="ing-row auto-row">
+        <div class="mono" style="align-self:center">&#8226; ${b.saltIngredient||'Sal comun'}</div>
+        <div class="mono" style="align-self:center;color:var(--brand)">${fmt(demo.commonG,2)}</div>
+        <span class="mono tiny" style="align-self:center">g/kg</span>
+        <div class="tiny" style="align-self:center;color:var(--muted)">automatico</div>
+        <div></div>
+      </div>
+      ${demo.cureG>0 && cureIng ? `<div class="ing-row auto-row">
+        <div class="mono" style="align-self:center">&#8226; ${cureIng.name}</div>
+        <div class="mono" style="align-self:center;color:var(--brand)">${fmt(demo.cureG,2)}</div>
+        <span class="mono tiny" style="align-self:center">g/kg</span>
+        <div class="tiny" style="align-self:center;color:var(--muted)">automatico</div>
+        <div></div>
+      </div>` : ''}
+      ${demo.waterG>0 ? `<div class="ing-row auto-row">
+        <div class="mono" style="align-self:center">&#8226; Agua destilada</div>
+        <div class="mono" style="align-self:center;color:var(--brand)">${fmt(demo.waterG,0)}</div>
+        <span class="mono tiny" style="align-self:center">ml/kg</span>
+        <div class="tiny" style="align-self:center;color:var(--muted)">automatico</div>
+        <div></div>
+      </div>` : ''}
+    </div>
+  `;
+}
 function renderRecipeEditor(t, s, i){
   const req = STAGE_MAP[s.kind].recipe==='required';
   return `
-    <div class="divider-lbl">Receta ${req?'(obligatoria)':'(opcional)'} · cantidades por kg de carne</div>
+    <div class="divider-lbl">Receta ${req?'(obligatoria)':'(opcional)'} &middot; cantidades por kg de carne</div>
+    ${renderBrineAutoRowsForType(t, s)}
     <div class="ing-head">
       <div>Ingrediente</div><div>Cantidad</div><div>Unidad</div><div>Nota</div><div></div>
     </div>
@@ -2073,7 +2940,12 @@ function renderRecipeEditor(t, s, i){
       const ing = db.ingredients.find(x=>x.name===r.ingredient);
       return `<div class="ing-row">
         <select onchange="updateRecipeIng('${t.id}',${i},${ri},'ingredient',this.value)">
-          ${db.ingredients.filter(x=>x.category!=='carne').map(x=>`<option ${r.ingredient===x.name?'selected':''}>${x.name}</option>`).join('')}
+          ${db.ingredients.filter(x=>{
+            if(x.category==='carne') return false;
+            // On Curado, salts are managed by the brine — hide from picker
+            if(s.kind==='Curado' && (x.category==='sal' || x.category==='sal-curado')) return false;
+            return true;
+          }).map(x=>`<option ${r.ingredient===x.name?'selected':''}>${x.name}</option>`).join('')}
         </select>
         <input type="number" step="0.01" value="${r.amount}" oninput="updateRecipeIng('${t.id}',${i},${ri},'amount',+this.value)">
         <span class="mono tiny" style="align-self:center">${ing?.unit||'g'}/kg</span>
@@ -2136,6 +3008,12 @@ function viewIngredients(){
 
 function showModal(html){
   document.getElementById('modal-root').innerHTML = `<div class="overlay" onclick="if(event.target===this)closeModal()">${html}</div>`;
+  // Wire focus preservation for inputs inside the modal too
+  document.querySelectorAll('#modal-root input[type=number], #modal-root input[type=text], #modal-root input:not([type]), #modal-root textarea').forEach(el=>{
+    if(el.dataset.focusWired) return;
+    el.dataset.focusWired = '1';
+    el.addEventListener('focus', ()=> withFocusPreservation(el));
+  });
 }
 function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
 
@@ -2288,11 +3166,27 @@ function createBatch(){
     const startedAt = new Date(cursor).toISOString();
     const expectedEnd = addDays(cursor, d);
     cursor = new Date(expectedEnd);
+    // Deep-copy brine (with nested cureSalt) to avoid mutating the type when the batch is edited
+    let brineCopy = null;
+    if(s.brine){
+      brineCopy = {
+        saltPct: s.brine.saltPct,
+        waterPct: s.brine.waterPct,
+        saltIngredient: s.brine.saltIngredient,
+        cureSalt: s.brine.cureSalt ? { ...s.brine.cureSalt } : { ingredient:null, gPerKg:0 }
+      };
+    } else if(s.kind==='Curado'){
+      // Curado without a brine — provide a sensible default so the recipe/brine UI works
+      brineCopy = { saltPct:2.8, waterPct:0, saltIngredient: defaultCommonSaltName(), cureSalt:{ ingredient:null, gPerKg:0 } };
+    }
     return {
       kind: s.kind,
+      shape: s.shape || null,
+      eb: s.eb || false,
       startedAt, expectedEnd,
       dEst: d,
       done: false, actualEnd: null,
+      brine: brineCopy,
       recipe: (s.recipe||[]).map(r=>({...r})),
       inoc: s.inoc? {...s.inoc} : null,
       env: s.env? {...s.env} : null,
@@ -3211,6 +4105,12 @@ function emptyState(title, msg){
 }
 
 function wireGlobal(){
+  // Auto-preserve focus on all number/text/textarea inputs during oninput
+  document.querySelectorAll('input[type=number], input[type=text], input:not([type]), textarea').forEach(el=>{
+    if(el.dataset.focusWired) return;
+    el.dataset.focusWired = '1';
+    el.addEventListener('focus', ()=> withFocusPreservation(el));
+  });
   // Nothing global here - all delegated via onclick attrs on generated HTML.
 }
 
